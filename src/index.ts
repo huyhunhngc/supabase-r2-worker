@@ -9,6 +9,7 @@ import { handleUpload } from './handlers/upload';
 import { handleDownload } from './handlers/download';
 import { handleListFiles } from './handlers/list';
 import { handleDeleteFile } from './handlers/delete';
+import { handleGetSignedUrl } from './handlers/signed-url';
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -41,6 +42,10 @@ export default {
 
 			if (pathname === '/files' && method === 'GET') {
 				return await handleListFiles(request, env, userId, supabase);
+			}
+
+			if (pathname.match(/^\/files\/[^\/]+\/signed-url$/) && method === 'GET') {
+				return await handleGetSignedUrl(request, env, userId, supabase);
 			}
 
 			if (pathname.startsWith('/files/') && method === 'DELETE') {

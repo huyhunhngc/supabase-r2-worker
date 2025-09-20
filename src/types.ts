@@ -24,6 +24,8 @@ export interface FileMetadata {
 	mime_type?: string;
 	file_size?: number;
 	created_at?: string;
+	file_sign_url?: string;
+	file_sign_url_expire?: string;
 }
 
 export interface UploadResponse {
@@ -53,6 +55,14 @@ export interface ListFilesResponse {
 export interface DeleteResponse {
 	success: boolean;
 	message?: string;
+	error?: string;
+}
+
+export interface SignedUrlResponse {
+	success: boolean;
+	file_id?: string;
+	file_sign_url?: string;
+	file_sign_url_expire?: string;
 	error?: string;
 }
 

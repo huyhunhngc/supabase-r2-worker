@@ -44,7 +44,8 @@ export async function generateUploadUrl(
 
 export async function generateDownloadUrl(
 	s3Client: S3Client,
-	filePath: string
+	filePath: string,
+	expiresInMinutes?: number
 ): Promise<string> {
 	try {
 		const getCommand = new GetObjectCommand({
@@ -52,8 +53,11 @@ export async function generateDownloadUrl(
 			Key: filePath,
 		});
 
+		// Convert minutes to seconds, default to API_CONFIG.DOWNLOAD_URL_EXPIRY
+		const expiresIn = expiresInMinutes ? expiresInMinutes * 60 : API_CONFIG.DOWNLOAD_URL_EXPIRY;
+
 		return await getSignedUrl(s3Client, getCommand, {
-			expiresIn: API_CONFIG.DOWNLOAD_URL_EXPIRY,
+			expiresIn,
 		});
 	} catch (error) {
 		throw new StorageError('Failed to generate download URL');
