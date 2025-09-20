@@ -17,7 +17,8 @@
 	"r2_buckets": [
 		{
 			"binding": "STORAGE_BUCKET",
-			"bucket_name": "aio-scanner-files"
+			"bucket_name": "aio-scanner-files",
+			"preview_bucket_name": "aio-scanner-files-dev"
 		}
 	],
 	/**

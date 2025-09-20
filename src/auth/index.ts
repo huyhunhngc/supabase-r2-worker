@@ -37,5 +37,8 @@ export function authenticateRequest(request: Request, jwtSecret: string): string
 	const authHeader = request.headers.get('Authorization');
 	const token = extractTokenFromHeader(authHeader);
 	const payload = verifyJWTToken(token, jwtSecret);
+	console.log('Authenticated user ID:', payload.sub);
+	console.log('Token payload:', payload);
+
 	return payload.sub; // Return user ID directly
 }

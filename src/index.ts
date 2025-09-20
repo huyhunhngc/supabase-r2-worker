@@ -24,7 +24,7 @@ export default {
 			const method = request.method;
 
 			// Authenticate request and get user ID (parse JWT locally - no API call!)
-			const userId = authenticateRequest(request, env.SUPABASE_JWT_SECRET);
+			const userId = await authenticateRequest(request, env.SUPABASE_JWT_SECRET);
 
 			// Initialize clients
 			const supabase = createSupabaseClient(env.SUPABASE_URL, env.SUPABASE_KEY);
