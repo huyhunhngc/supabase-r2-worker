@@ -1,9 +1,8 @@
 import { Env } from './types';
-import { authenticateRequest } from './auth';
-import { createS3Client } from './storage';
-import { createSupabaseClient } from './database';
-import { handlePreflight, handleError, createErrorResponse, isValidHttpMethod } from './utils';
-import { HTTP_STATUS } from './constants';
+import { authenticateRequest } from './auth/index';
+import { createS3Client } from './storage/index';
+import { createSupabaseClient } from './database/index';
+import { handlePreflight, handleError } from './utils/index';
 
 // Import handlers
 import { handleUpload } from './handlers/upload';
@@ -24,11 +23,11 @@ export default {
 			const pathname = url.pathname;
 			const method = request.method;
 
-			// Authenticate request and get user ID
+			// Authenticate request and get user ID (parse JWT locally - no API call!)
 			const userId = authenticateRequest(request, env.SUPABASE_JWT_SECRET);
 
 			// Initialize clients
-			const supabase = createSupabaseClient(env.SUPABASE_URL, env.SUPABASE_JWT_SECRET);
+			const supabase = createSupabaseClient(env.SUPABASE_URL, env.SUPABASE_KEY);
 			const s3Client = createS3Client(env);
 
 			// Route to appropriate handler
@@ -49,7 +48,10 @@ export default {
 			}
 
 			// Route not found
-			return createErrorResponse('Not found', HTTP_STATUS.NOT_FOUND);
+			return new Response(JSON.stringify({ error: 'Not found' }), {
+				status: 404,
+				headers: { 'Content-Type': 'application/json' },
+			});
 
 		} catch (error) {
 			return handleError(error);

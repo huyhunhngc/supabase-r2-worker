@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { FileMetadata, SupabaseClient } from './types';
-import { API_CONFIG } from './constants';
+import { FileMetadata, SupabaseClient } from '../types';
+import { API_CONFIG } from '../constants';
 
 export class DatabaseError extends Error {
 	constructor(message: string, public statusCode: number = 500) {
@@ -9,8 +9,8 @@ export class DatabaseError extends Error {
 	}
 }
 
-export function createSupabaseClient(url: string, jwtSecret: string): SupabaseClient {
-	return createClient(url, jwtSecret);
+export function createSupabaseClient(url: string, anonKey: string): SupabaseClient {
+	return createClient(url, anonKey);
 }
 
 export async function insertFileMetadata(

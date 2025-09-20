@@ -1,5 +1,5 @@
 import { Env, DeleteResponse, SupabaseClient } from '../types';
-import { deleteFileFromStorage } from '../storage';
+import { deleteFileFromStorage, createS3Client } from '../storage';
 import { getFileMetadata, deleteFileMetadata } from '../database';
 import { createSuccessResponse } from '../utils';
 import { HTTP_STATUS } from '../constants';
@@ -22,8 +22,9 @@ export async function handleDeleteFile(
 	const fileMetadata = await getFileMetadata(supabase, fileId, userId);
 
 	// Delete from R2 storage
+	const s3Client = createS3Client(env);
 	try {
-		await deleteFileFromStorage(env.STORAGE_BUCKET, fileMetadata.file_path);
+		await deleteFileFromStorage(s3Client, fileMetadata.file_path);
 	} catch (storageError) {
 		console.error('R2 delete error:', storageError);
 		// Continue with database deletion even if storage deletion fails

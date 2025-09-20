@@ -7,6 +7,8 @@ declare namespace Cloudflare {
 	}
 	interface Env {
 		SUPABASE_URL: "";
+		SUPABASE_KEY: "";
+		SUPABASE_JWT_SECRET: "";
 		R2_ACCOUNT_ID: "";
 		R2_ACCESS_KEY_ID: "";
 		R2_SECRET_ACCESS_KEY: "";

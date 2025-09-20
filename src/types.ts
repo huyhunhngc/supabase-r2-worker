@@ -1,6 +1,7 @@
 export interface Env {
 	STORAGE_BUCKET: R2Bucket;
 	SUPABASE_URL: string;
+	SUPABASE_KEY: string;
 	SUPABASE_JWT_SECRET: string;
 	R2_ACCOUNT_ID: string;
 	R2_ACCESS_KEY_ID: string;

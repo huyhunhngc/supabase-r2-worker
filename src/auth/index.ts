@@ -1,11 +1,17 @@
 import jwt from 'jsonwebtoken';
-import { JWTPayload } from './types';
 
 export class AuthError extends Error {
 	constructor(message: string, public statusCode: number = 401) {
 		super(message);
 		this.name = 'AuthError';
 	}
+}
+
+interface JWTPayload {
+	sub: string;  // user ID
+	email?: string;
+	iat: number;
+	exp: number;
 }
 
 export function extractTokenFromHeader(authHeader: string | null): string {
@@ -27,13 +33,9 @@ export function verifyJWTToken(token: string, secret: string): JWTPayload {
 	}
 }
 
-export function extractUserIdFromToken(token: string, secret: string): string {
-	const payload = verifyJWTToken(token, secret);
-	return payload.sub;
-}
-
 export function authenticateRequest(request: Request, jwtSecret: string): string {
 	const authHeader = request.headers.get('Authorization');
 	const token = extractTokenFromHeader(authHeader);
-	return extractUserIdFromToken(token, jwtSecret);
+	const payload = verifyJWTToken(token, jwtSecret);
+	return payload.sub; // Return user ID directly
 }

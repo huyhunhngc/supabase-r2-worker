@@ -1,8 +1,8 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-import { Env } from './types';
-import { API_CONFIG, R2_CONFIG } from './constants';
+import { GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { Env } from '../types';
+import { API_CONFIG, R2_CONFIG } from '../constants';
 
 export class StorageError extends Error {
 	constructor(message: string, public statusCode: number = 500) {
@@ -61,12 +61,17 @@ export async function generateDownloadUrl(
 }
 
 export async function deleteFileFromStorage(
-	bucket: R2Bucket,
+	s3Client: S3Client,
 	filePath: string
 ): Promise<void> {
 	try {
-		await bucket.delete(filePath);
+		const command = new DeleteObjectCommand({
+			Bucket: R2_CONFIG.BUCKET_NAME,
+			Key: filePath,
+		});
+		await s3Client.send(command);
 	} catch (error) {
+		console.error('R2 delete error:', error);
 		throw new StorageError('Failed to delete file from storage');
 	}
 }

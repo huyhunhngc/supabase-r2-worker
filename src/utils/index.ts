@@ -1,8 +1,8 @@
-import { CORS_HEADERS, HTTP_STATUS } from './constants';
-import { ErrorResponse } from './types';
-import { AuthError } from './auth';
-import { StorageError } from './storage';
-import { DatabaseError } from './database';
+import { CORS_HEADERS, HTTP_STATUS } from '../constants';
+import { ErrorResponse } from '../types';
+import { AuthError } from '../auth';
+import { StorageError } from '../storage';
+import { DatabaseError } from '../database';
 
 export function createCorsResponse(
 	body?: any,
