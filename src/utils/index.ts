@@ -58,18 +58,18 @@ export function handleError(error: unknown): Response {
 	return createErrorResponse('Internal server error', HTTP_STATUS.INTERNAL_SERVER_ERROR);
 }
 
-export function validateFormField(
-	formData: FormData,
-	fieldName: string,
-	required: boolean = true
+export function validateFormField<T, K extends keyof T>(
+  data: T,
+  fieldName: K,
+  required: boolean = true
 ): string | null {
-	const value = formData.get(fieldName) as string;
+  const value = data[fieldName];
 
-	if (required && !value) {
-		throw new Error(`${fieldName} is required`);
-	}
+  if (required && (value === undefined || value === null || value === "")) {
+    throw new Error(`${String(fieldName)} is required`);
+  }
 
-	return value;
+  return value !== undefined && value !== null ? String(value) : null;
 }
 
 export function validateQueryParam(

@@ -5,6 +5,12 @@ import { insertFileMetadata } from '../database';
 import { validateFormField, createSuccessResponse, parseIntParam } from '../utils';
 import { HTTP_STATUS } from '../constants';
 
+interface UploadRequest {
+  file_name: string;
+  mime_type?: string;
+  file_size?: number;
+}
+
 export async function handleUpload(
 	request: Request,
 	env: Env,
@@ -12,12 +18,12 @@ export async function handleUpload(
 	supabase: SupabaseClient,
 	s3Client: S3Client
 ): Promise<Response> {
-	const formData = await request.formData();
+	const body: UploadRequest = await request.json();
 
 	// Validate required fields
-	const fileName = validateFormField(formData, 'file_name', true)!;
-	const mimeType = validateFormField(formData, 'mime_type', false);
-	const fileSizeStr = validateFormField(formData, 'file_size', false);
+	const fileName = validateFormField(body, 'file_name', true)!;
+	const mimeType = validateFormField(body, 'mime_type', false);
+	const fileSizeStr = validateFormField(body, 'file_size', false);
 	const fileSize = fileSizeStr ? parseIntParam(fileSizeStr, 0) : undefined;
 
 	// Generate unique file path and ID
