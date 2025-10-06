@@ -1,10 +1,8 @@
-# AIO Scanner Storage
-
 Simple Cloudflare Worker for secure file storage using R2 and Supabase.
 
 ## Features
 
-- Supabase Auth integration (modern approach)
+- Supabase Auth integration
 - R2 file storage with signed URLs
 - File metadata in PostgreSQL
 
@@ -30,7 +28,7 @@ Simple Cloudflare Worker for secure file storage using R2 and Supabase.
 ## Setup
 
 ### 1. Create R2 Bucket
-- Create bucket `aio-scanner-files` in Cloudflare dashboard
+- Create bucket in Cloudflare dashboard
 
 ### 2. Database Setup
 ```sql
@@ -48,7 +46,13 @@ ALTER TABLE files ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can manage own files" ON files FOR ALL USING (auth.uid() = user_id);
 ```
 
-### 3. Set Secrets
+### 3. Development
+Create `.dev.vars` file and put all secrets
+```bash
+npx wrangler dev
+```
+
+### 4. Set Secrets
 ```bash
 # Use Cloudflare integration to auto-set SUPABASE_URL and SUPABASE_KEY
 # Or manually set:
@@ -63,16 +67,8 @@ wrangler secret put R2_SECRET_ACCESS_KEY
 
 ### 4. Deploy
 ```bash
-npm install
-wrangler deploy
+npx wrangler deploy
 ```
 
 ## Modern Supabase Integration
-
-This project uses the **modern Supabase integration** approach:
-
-1. **No JWT secrets** - Uses `supabase.auth.getUser(token)` instead
-2. **Standard Supabase client** - Uses `@supabase/supabase-js` normally  
-3. **Cloudflare integration** - Can auto-configure `SUPABASE_URL` and `SUPABASE_KEY`
-
 See: https://supabase.com/partners/integrations/cloudflare-workers
